@@ -3,7 +3,15 @@ const express = require("express");
 const app = express();
 
 dotenv.config({path:'./config.env'});
+
 require('./db/conn');
+// const User = require('./models/userSchema');
+
+// to display json data from postman
+app.use(express.json());
+
+// linking to router
+app.use(require('./router/auth'));
 
 const PORT = process.env.PORT;
 
@@ -14,7 +22,7 @@ const midddleware = (req,res,next) =>{
 }
 
 app.get('/',(req,res)=>{
-    res.send("Hello world from backend");
+    res.send("Hello world from backend app.js");
 });
 
 app.get('/about',midddleware,(req, res)=>{
