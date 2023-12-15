@@ -7,7 +7,7 @@ dotenv.config({path:'./config.env'});
 require('./db/conn');
 // const User = require('./models/userSchema');
 
-// to display json data from postman
+// to display JSON data from postman
 app.use(express.json());
 
 // linking to router
