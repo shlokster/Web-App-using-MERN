@@ -52,17 +52,40 @@ router.post('/register', async (req,res)=>{
         const userExists = await User.findOne({email:email})
         if(userExists){
                 return res.status(422).json({error:"Email already exist"});
+            }else if(password!=password) {
+                return res.status(422).json({error:"Password not matching"});
             }
-
-        const user = new User({name,email,phone,work,password,cpassword});
-            
-        await user.save()
-        
-        res.status(201).json({ message :"user registered" });
-        
+            else{
+                const user = new User({name,email,phone,work,password,cpassword});
+                // hashing pre here (using bcrypt from userSchema.js ) 
+                await user.save()
+                res.status(201).json({ message :"user registered" });
+            }
     } catch(err){
         console.log(err);
     }
     }); 
+
+
+// Login Route
+
+    router.post('/login',async (req,res)=>{
+        const {email,password} = req.body;
+
+        if(!email || !password )
+        return res.status(422).json({error:"Empty field"});
+        
+        try{
+        const response = await User.findOne({email:email});
+        if(response){
+        res.status(200).json({ message :"Login Successful" });
+        }else{
+            res.status(400).json({ error :"Login Unsuccessful" });
+        }
+        }
+        catch(err){
+            console.log("Error, try again.")
+        }
+    })
 
 module.exports = router;
