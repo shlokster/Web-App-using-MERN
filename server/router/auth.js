@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const express = require("express");
 const router = express.Router();
 
@@ -78,9 +79,14 @@ router.post('/register', async (req,res)=>{
         try{
         const response = await User.findOne({email:email});
         if(response){
-        res.status(200).json({ message :"Login Successful" });
+            const isMatch = await bcrypt.compare(password,response.password);
+            if(isMatch)
+                res.status(200).json({ message :"Login Successful" });
+            else
+                res.status(400).json({ error :"Incorrect Password" });
+
         }else{
-            res.status(400).json({ error :"Login Unsuccessful" });
+            res.status(400).json({ error :"Incorrect email" });
         }
         }
         catch(err){
