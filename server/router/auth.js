@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const express = require("express");
 const router = express.Router();
@@ -71,6 +72,7 @@ router.post('/register', async (req,res)=>{
 // Login Route
 
     router.post('/login',async (req,res)=>{
+        let token;
         const {email,password} = req.body;
 
         if(!email || !password )
@@ -80,6 +82,8 @@ router.post('/register', async (req,res)=>{
         const response = await User.findOne({email:email});
         if(response){
             const isMatch = await bcrypt.compare(password,response.password);
+            const token =  await response.generateAuthToken();
+
             if(isMatch)
                 res.status(200).json({ message :"Login Successful" });
             else
